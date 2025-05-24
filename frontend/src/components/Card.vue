@@ -6,16 +6,18 @@
         <span>{{ item.name }}</span>
       </p>
       <span class="discount badge bg-danger">
-          {{item.discountPer}}%
+          {{ item.discountPer }}%
         </span>
       <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-primary">구입하기</button>
+        <button class="btn btn-primary" @click="addToCart(item.id)">
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        </button>
         <small class="price text-muted">
-          {{lib.getNumberFormatted(item.price)}}원
+          {{ lib.getNumberFormatted(item.price) }}원
         </small>
 
         <small class="real text-danger">
-          {{ lib.getNumberFormatted(item.price - (item.price * item.discountPer / 100))}}
+          {{ lib.getNumberFormatted(item.price - (item.price * item.discountPer / 100)) }}
         </small>
       </div>
     </div>
@@ -24,6 +26,7 @@
 
 <script>
 import lib from "@/scripts/lib";
+import axios from "axios";
 
 export default {
   name: "Card",
@@ -31,7 +34,12 @@ export default {
     item: Object
   },
   setup() {
-    return {lib}
+    const addToCart = (itemId) => {
+      axios.post(`/api/cart/items/${itemId}`).then(() => {
+        console.log("success")
+      })
+    }
+    return {lib, addToCart}
   }
 }
 </script>
@@ -44,7 +52,7 @@ export default {
   background-position: center;
 }
 
-.card .card-body .price{
+.card .card-body .price {
   text-decoration: line-through;
 }
 </style>
